@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -172,7 +173,16 @@ public class EmailMessage {
     }
 
     public void finish() {
-      content = CharMatcher.WHITESPACE.trimFrom(Lists.reverse(lines).stream().collect(Collectors.joining("\n")));
+      StringBuilder stringBuilder = new StringBuilder();
+      String loopDelimiter = "";
+      for(String line : Lists.reverse(lines)){
+        stringBuilder.append(loopDelimiter);
+        stringBuilder.append(line);
+        loopDelimiter = "\n";
+      }
+      content = CharMatcher.WHITESPACE.trimFrom(
+              stringBuilder.subSequence(0, stringBuilder.length())
+      );
       lines = ImmutableList.of();
     }
   }
