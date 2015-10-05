@@ -9,6 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.driftt.email.EmailMessage.read;
@@ -76,13 +77,24 @@ public class EmailParserTest {
     Assertions.assertThat(fragments).hasSize(2);
     Assertions.assertThat(fragments.get(1).getContent()).contains("--");
 
-    List<Boolean> quoted = message.getFragments().stream().map(f -> f.isQuoted()).collect(toList());
+    List<Boolean> quoted = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        quoted.add(f.isQuoted());
+    }
     Assertions.assertThat(quoted).containsExactly(false, false);
 
-    List<Boolean> signatures = message.getFragments().stream().map(f -> f.isSignature()).collect(toList());
+    List<Boolean> signatures = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        signatures.add(f.isSignature());
+    }
+
     Assertions.assertThat(signatures).containsExactly(false, true);
 
-    List<Boolean> hidden = message.getFragments().stream().map(f -> f.isHidden()).collect(toList());
+    List<Boolean> hidden = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        hidden.add(f.isHidden());
+    }
+
     Assertions.assertThat(hidden).containsExactly(false, true);
   }
 
@@ -94,10 +106,16 @@ public class EmailParserTest {
     Assertions.assertThat(fragments.get(0).getContent()).contains("folks");
     Assertions.assertThat(fragments.get(2).getContent()).contains("riak-users");
 
-    List<Boolean> signatures = message.getFragments().stream().map(f -> f.isSignature()).collect(toList());
+    List<Boolean> signatures = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        signatures.add(f.isSignature());
+    }
     Assertions.assertThat(signatures).containsExactly(false, true, true);
 
-    List<Boolean> hidden = message.getFragments().stream().map(f -> f.isHidden()).collect(toList());
+    List<Boolean> hidden = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        hidden.add(f.isHidden());
+    }
     Assertions.assertThat(hidden).containsExactly(false, true, true);
   }
 
@@ -107,13 +125,22 @@ public class EmailParserTest {
     List<EmailMessage.Fragment> fragments = message.getFragments();
     Assertions.assertThat(fragments).hasSize(6);
 
-    List<Boolean> quoted = message.getFragments().stream().map(f -> f.isQuoted()).collect(toList());
+    List<Boolean> quoted = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        quoted.add(f.isQuoted());
+    }
     Assertions.assertThat(quoted).containsExactly(false, true, false, true, false, false);
 
-    List<Boolean> signatures = message.getFragments().stream().map(f -> f.isSignature()).collect(toList());
+    List<Boolean> signatures = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        signatures.add(f.isSignature());
+    }
     Assertions.assertThat(signatures).containsExactly(false, false, false, false, false, true);
 
-    List<Boolean> hidden = message.getFragments().stream().map(f -> f.isHidden()).collect(toList());
+    List<Boolean> hidden = new ArrayList<>();
+    for(EmailMessage.Fragment f : fragments){
+        hidden.add(f.isHidden());
+    }
     Assertions.assertThat(hidden).containsExactly(false, false, false, true, true, true);
 
     Assertions.assertThat(fragments.get(0).getContent()).contains("Hi");

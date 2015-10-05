@@ -48,10 +48,16 @@ public class EmailMessage {
   }
 
   public String getReply() {
-    return fragments.stream()
-                    .filter(f -> !(f.isHidden() || f.isQuoted()))
-                    .map(f -> f.getContent())
-                    .collect(Collectors.joining("\n"));
+    StringBuilder stringBuffer = new StringBuilder();
+    String loopDelimiter = "";
+    for(Fragment fragment : fragments){
+      if(!(fragment.isHidden() || fragment.isQuoted())){
+        stringBuffer.append(loopDelimiter);
+        stringBuffer.append(fragment.getContent());
+        loopDelimiter = "\n";
+      }
+    }
+    return stringBuffer.toString();
   }
 
   public void read() {
@@ -65,9 +71,11 @@ public class EmailMessage {
         newQuoteHeader);
     }
 
-    Lists.reverse(Splitter.on('\n').splitToList(workingText))
-         .stream()
-         .forEach(l -> scanLine(l));
+    List<String> lines =
+            Lists.reverse(Splitter.on('\n').splitToList(workingText));
+    for(String line : lines){
+      scanLine(line);
+    }
 
     finishFragment();
 
